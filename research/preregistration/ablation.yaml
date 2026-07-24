@@ -1,0 +1,21 @@
+status: preregistered_before_confirmatory_results
+ablations:
+  - full_cage
+  - parent
+  - static_matched_cost_sjw
+  - audit_reporting_only
+  - reusable_selector_no_crossfit
+  - mean_instead_of_tail
+  - empirical_tail_no_bound
+  - no_s
+  - no_j
+  - no_w
+  - cost_blind
+  - training_signal_controller
+  - no_exploration_entropy
+  - no_rotation_refresh
+  - exact_vs_sketch
+  - identity_vs_conditioned_preconditioner
+rope_relative_error: 0.05
+notes: "Component retention requires aggregate or regime-specific contribution."
+

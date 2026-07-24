@@ -1,0 +1,7 @@
+name: xpinn
+subdomains: 2
+width: 24
+depth: 3
+interface_weight: 1.0
+flux_weight: 1.0
+

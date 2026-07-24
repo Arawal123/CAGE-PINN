@@ -1,0 +1,50 @@
+study: discovery
+frozen: false
+created_at: "2026-07-24T00:00:00+05:30"
+seeds: [0, 1, 2, 3, 4]
+problems:
+  - advection_1d
+  - burgers_1d
+  - allen_cahn
+  - helmholtz_2d
+  - kovasznay
+  - weak_sharp
+methods:
+  - vanilla
+  - uniform
+  - rar_d
+  - gpinn
+  - relobralo
+  - sa_pinn
+  - config
+  - weak_pinn
+  - static_sjw
+  - cage
+backbones: [vanilla, xpinn, ab_pinn]
+method_backbone_pairs:
+  - [vanilla, vanilla]
+  - [uniform, vanilla]
+  - [rar_d, vanilla]
+  - [gpinn, vanilla]
+  - [relobralo, vanilla]
+  - [sa_pinn, vanilla]
+  - [config, vanilla]
+  - [weak_pinn, vanilla]
+  - [static_sjw, vanilla]
+  - [cage, vanilla]
+  - [vanilla, xpinn]
+  - [cage, xpinn]
+  - [vanilla, ab_pinn]
+  - [cage, ab_pinn]
+budget:
+  kind: ad_tokens
+  total: 500000
+  wall_seconds: 3600
+  calibration_required: true
+tuning_policy:
+  evaluations_per_method: 12
+  selection_signal: monitor-independent discovery audit metric
+  confirmatory_access: forbidden
+reference_policy:
+  require_validated_reference: true
+  controller_access: forbidden

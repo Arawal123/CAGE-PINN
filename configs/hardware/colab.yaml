@@ -1,0 +1,6 @@
+platform: colab
+precision: float64
+exclusive_device: true
+calibrate_on_target: true
+notes: "Record the actual Colab accelerator SKU; do not compare across changing SKUs."
+

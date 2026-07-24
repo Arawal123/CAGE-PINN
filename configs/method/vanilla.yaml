@@ -1,0 +1,4 @@
+enabled: false
+atoms: [S]
+fixed_allocation: {S: 1.0}
+

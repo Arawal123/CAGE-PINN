@@ -1,0 +1,7 @@
+name: heat_1d
+family: parabolic
+dimension: 2
+outputs: 1
+reference: analytic
+severity: smoke
+

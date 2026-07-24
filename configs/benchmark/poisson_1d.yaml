@@ -1,0 +1,7 @@
+name: poisson_1d
+family: elliptic
+dimension: 1
+outputs: 1
+reference: analytic
+severity: smoke
+

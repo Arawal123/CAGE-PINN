@@ -1,0 +1,26 @@
+status: preregistered_before_confirmatory_results
+one_factor_diagnostics:
+  audit_fold_size: [32, 64, 128, 256]
+  folds: [3, 4, 5]
+  refresh_interval: [2, 4, 8]
+  control_interval: [5, 10, 20]
+  cvar_q: [0.9, 0.95, 0.99]
+  delta: [0.1, 0.05, 0.01]
+  normalization_decay: [0.8, 0.95, 0.99]
+  sketch_dimension: [16, 64, 256]
+  weak_scales:
+    - [0.05, 0.15]
+    - [0.05, 0.15, 0.30]
+  quadrature_points: [4, 8, 16]
+  entropy: [0.05, 0.15, 0.30]
+  turnover_penalty: [0.0, 0.1, 0.5]
+  learning_rate: [0.0003, 0.001, 0.003]
+  width: [32, 64, 128]
+  depth: [3, 5, 8]
+  precision: [float32, float64]
+global_screen:
+  method: morris_or_fractional_factorial
+  tasks: [advection_1d, helmholtz_2d, kovasznay]
+  budget_fraction_of_discovery: 0.25
+selection_rule: "Freeze one default on discovery; no confirmatory tuning."
+

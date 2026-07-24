@@ -1,0 +1,26 @@
+enabled: true
+control_interval: 10
+audit:
+  folds: 3
+  fold_size: 128
+  rotate_interval: 5
+  refresh_after_selections: 4
+  prohibited_window: 2
+  cvar_q: 0.95
+  delta: 0.05
+  planned_audits: 100
+normalization:
+  ema_decay: 0.95
+  epsilon: 1.0e-8
+controller:
+  sketch_dim: 64
+  exact: false
+  temperature: 0.15
+  turnover_penalty: 0.1
+  floors: {S: 0.10, J: 0.05, W: 0.05}
+  caps: {S: 0.90, J: 0.45, W: 0.45}
+  max_change: 0.25
+weak:
+  scales: [0.05, 0.15, 0.30]
+  quadrature_points: 8
+

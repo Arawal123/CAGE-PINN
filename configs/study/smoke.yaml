@@ -1,0 +1,8 @@
+study: smoke
+seeds: [0]
+problems: [poisson_1d, heat_1d, coupled_ode]
+methods: [vanilla, cage]
+backbones: [vanilla, xpinn, ab_pinn]
+steps: 8
+primary_purpose: "Pipeline validation only; not scientific evidence."
+

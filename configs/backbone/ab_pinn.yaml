@@ -1,0 +1,7 @@
+name: ab_pinn
+windows: 3
+width: 24
+depth: 3
+trainable_windows: true
+addition_schedule: []
+

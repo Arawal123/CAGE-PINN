@@ -1,0 +1,11 @@
+kind: ad_tokens
+total: 2000
+wall_seconds: 300
+budget_tolerance: 0
+cost_weights:
+  residual_order_0: 1.0
+  residual_order_1: 2.0
+  residual_order_2: 4.0
+  audit_backward: 2.0
+  weak_quadrature: 1.0
+

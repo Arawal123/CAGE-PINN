@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, cite the archived release and the associated paper when available."
+title: "CAGE-PINN Research Repository"
+type: software
+version: 0.1.0
+date-released: 2026-07-24
+license: MIT
+repository-code: "https://github.com/REPLACE_WITH_OWNER/CAGE-PINN"
+authors:
+  - name: "CAGE-PINN contributors"
+

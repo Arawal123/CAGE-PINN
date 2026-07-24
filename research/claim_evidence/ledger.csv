@@ -1,0 +1,10 @@
+claim_id,exact_proposed_claim,required_evidence,supporting_experiment_table_figure,status,scope_limitations,approved_manuscript_wording
+C001,CAGE code enforces learner/selector/monitor separation,Leakage unit/property/integration tests,tests/unit/test_audit.py,partial,Runtime tests do not prove every future plugin is leak-free,CAGE's core fold manager enforces hashed coordinate separation in the tested configurations.
+C002,CAGE improves solution accuracy over vanilla,Paired confirmatory fixed-budget results across preregistered PDEs,,unsupported,No confirmatory experiments completed,
+C003,Audit risk predicts solution error,Paired audit/error correlation with uncertainty across benchmarks,,unsupported,Smoke diagnostics are not evidence,
+C004,Audit-gradient utility predicts monitor improvement,Short-horizon calibration study against random selection,,unsupported,Not yet run,
+C005,CAGE is novel,Completed systematic search with two snowball rounds and independent adjudication,research/novelty/collision_matrix.md,partial,Current search is a non-exhaustive seed screen,
+C006,CAGE preserves exact symbolic compute budget,Budget and allocation property tests,tests/unit/test_budget_controller.py,partial,Device-time calibration remains hardware-specific,The tested scheduler and ledger conserve declared symbolic tokens.
+C007,S J and W are new,None; claim is invalid,research/novelty/collision_matrix.md,contradicted,All are established or adjacent primitives,No such wording is approved.
+C008,Reference solutions do not influence training,Source audit and integration test,tests/unit/test_no_reference_leakage.py,partial,External plugins require separate audit,The tested core training path does not import reference values.
+

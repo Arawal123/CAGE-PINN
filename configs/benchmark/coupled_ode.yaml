@@ -1,0 +1,7 @@
+name: coupled_ode
+family: first_order_system
+dimension: 1
+outputs: 2
+reference: analytic
+severity: smoke
+
