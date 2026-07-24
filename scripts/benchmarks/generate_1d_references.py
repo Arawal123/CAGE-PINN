@@ -11,11 +11,14 @@ import argparse
 import hashlib
 import json
 from collections.abc import Callable
+from datetime import UTC, datetime
 from pathlib import Path
 
 import numpy as np
+import scipy
 from scipy.integrate import solve_ivp
 from scipy.interpolate import RegularGridInterpolator
+from scipy.sparse import csr_matrix, lil_matrix
 
 
 def sha256(path: Path) -> str:
@@ -27,12 +30,29 @@ def sha256(path: Path) -> str:
 
 
 def burgers_rhs(viscosity: float, dx: float) -> Callable[[float, np.ndarray], np.ndarray]:
+    def minmod(first: np.ndarray, second: np.ndarray) -> np.ndarray:
+        same_sign = first * second > 0.0
+        return np.where(
+            same_sign,
+            np.sign(first) * np.minimum(np.abs(first), np.abs(second)),
+            0.0,
+        )
+
     def rhs(time: float, interior: np.ndarray) -> np.ndarray:
         del time
         full = np.pad(interior, (1, 1))
-        ux = (full[2:] - full[:-2]) / (2.0 * dx)
+        slopes = np.zeros_like(full)
+        backward = full[1:-1] - full[:-2]
+        forward = full[2:] - full[1:-1]
+        centered = 0.5 * (backward + forward)
+        slopes[1:-1] = minmod(2.0 * backward, minmod(centered, 2.0 * forward))
+        left = full[:-1] + 0.5 * slopes[:-1]
+        right = full[1:] - 0.5 * slopes[1:]
+        speed = np.maximum(np.abs(left), np.abs(right))
+        flux = 0.25 * (left**2 + right**2) - 0.5 * speed * (right - left)
+        convection = -(flux[1:] - flux[:-1]) / dx
         uxx = (full[2:] - 2.0 * full[1:-1] + full[:-2]) / dx**2
-        return -interior * ux + viscosity * uxx
+        return convection + viscosity * uxx
 
     return rhs
 
@@ -46,6 +66,18 @@ def allen_cahn_rhs(
         return diffusivity * uxx - reaction * (values**3 - values)
 
     return rhs
+
+
+def jacobian_sparsity(size: int, *, radius: int, periodic: bool = False) -> csr_matrix:
+    pattern = lil_matrix((size, size), dtype=np.int8)
+    for row in range(size):
+        for offset in range(-radius, radius + 1):
+            column = row + offset
+            if periodic:
+                column %= size
+            if 0 <= column < size:
+                pattern[row, column] = 1
+    return pattern.tocsr()
 
 
 def solve(problem: str, nx: int, nt: int, rtol: float, atol: float) -> tuple[np.ndarray, ...]:
@@ -62,9 +94,10 @@ def solve(problem: str, nx: int, nt: int, rtol: float, atol: float) -> tuple[np.
             t_eval=t,
             rtol=rtol,
             atol=atol,
+            jac_sparsity=jacobian_sparsity(len(initial) - 2, radius=2),
         )
         if not result.success:
-            raise RuntimeError(result.message)
+            raise RuntimeError(f"{problem} nx={nx}: {result.message}")
         values = np.zeros((nx, nt, 1))
         values[1:-1, :, 0] = result.y
     elif problem == "allen_cahn":
@@ -77,9 +110,10 @@ def solve(problem: str, nx: int, nt: int, rtol: float, atol: float) -> tuple[np.
             t_eval=t,
             rtol=rtol,
             atol=atol,
+            jac_sparsity=jacobian_sparsity(len(initial), radius=1, periodic=True),
         )
         if not result.success:
-            raise RuntimeError(result.message)
+            raise RuntimeError(f"{problem} nx={nx}: {result.message}")
         values = result.y[:, :, None]
     else:
         raise KeyError(problem)
@@ -131,11 +165,28 @@ def main() -> None:
         )
     metadata = {
         "problem": args.problem,
+        "created_at": datetime.now(UTC).isoformat(),
         "primary_file": files[-1]["file"],
         "primary_sha256": files[-1]["sha256"],
         "files": files,
         "resolutions": resolutions,
-        "solver": "scipy.solve_ivp BDF; second-order centered method of lines",
+        "solver": {
+            "library": "scipy.integrate.solve_ivp",
+            "scipy_version": scipy.__version__,
+            "time_integrator": "BDF",
+            "spatial_discretization": (
+                "conservative local Lax-Friedrichs flux with monotonized-central "
+                "reconstruction and second-order centered diffusion"
+                if args.problem == "burgers_1d"
+                else "second-order centered periodic diffusion and pointwise reaction"
+            ),
+        },
+        "input": {
+            "domain": [-1.0, 1.0],
+            "time_interval": [0.0, 1.0],
+            "time_points": args.time_points,
+            "resolutions": resolutions,
+        },
         "tolerances": {"rtol": args.rtol, "atol": args.atol},
         "convergence": {
             "relative_fine_coarse_difference": relative_difference,
